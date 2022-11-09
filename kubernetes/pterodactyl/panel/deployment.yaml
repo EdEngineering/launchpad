@@ -42,19 +42,19 @@ spec:
           value: "production"
         - name: APP_ENVIRONMENT_ONLY
           value: "false"
-        # - name: CACHE_DRIVER
-        #   value: "redis"
-        # - name: SESSION_DRIVER
-        #   value: "redis"
-        # - name: QUEUE_DRIVER
-        #   value: "redis" 
-        # - name: REDIS_HOST
-        #   value: "redis.example.com" # redis server ip or dns
-        # - name: REDIS_PASSWORD
-        #   valueFrom: 
-        #     secretKeyRef: 
-        #       key: REDIS_PASSWORD
-        #       name: pterodactyl-panel
+        - name: CACHE_DRIVER
+          value: "redis"
+        - name: SESSION_DRIVER
+          value: "redis"
+        - name: QUEUE_DRIVER
+          value: "redis" 
+        - name: REDIS_HOST
+          value: "redis.example.com" # redis server ip or dns
+        - name: REDIS_PASSWORD
+          valueFrom: 
+            secretKeyRef: 
+              key: REDIS_PASSWORD
+              name: pterodactyl-panel
         - name: DB_HOST
           value: "127.0.0.1" # database server ip or dns
         - name: DB_PORT
