@@ -42,29 +42,29 @@ spec:
           value: "production"
         - name: APP_ENVIRONMENT_ONLY
           value: "false"
-        - name: CACHE_DRIVER
-          value: "redis"
-        - name: SESSION_DRIVER
-          value: "redis"
-        - name: QUEUE_DRIVER
-          value: "redis" 
-        - name: REDIS_HOST
-          value: "redis.example.com" # redis server ip or dns
-        - name: REDIS_PASSWORD
-          valueFrom: 
-            secretKeyRef: 
-              key: REDIS_PASSWORD
-              name: pterodactyl-panel
+        # - name: CACHE_DRIVER
+        #   value: "redis"
+        # - name: SESSION_DRIVER
+        #   value: "redis"
+        # - name: QUEUE_DRIVER
+        #   value: "redis" 
+        # - name: REDIS_HOST
+        #   value: "redis.example.com" # redis server ip or dns
+        # - name: REDIS_PASSWORD
+        #   valueFrom: 
+        #     secretKeyRef: 
+        #       key: REDIS_PASSWORD
+        #       name: pterodactyl-panel
         - name: DB_HOST
-          value: "database.example.com" # database server ip or dns
+          value: "127.0.0.1" # database server ip or dns
         - name: DB_PORT
-          value: "33306"
+          value: "3306"
         - name: APP_URL
-          value: "https://pterodactyl.example.com" # url of server panel
+          value: "https://pterodactyl.evasquezapplaudo.ga" # url of server panel
         - name: APP_TIMEZONE
           value: "UTC"
         - name: APP_SERVICE_AUTHOR
-          value: "me@example.com"
+          value: "evasquez@applaudostudios.dev"
         - name: TRUSTED_PROXIES
           value: "*" # restrict this to your proxy ip
         volumeMounts:
@@ -76,7 +76,25 @@ spec:
           name: pterodactyl-le-content
         - mountPath: /app/storage/logs
           name: pterodactyl-logs-content
+
+      - name: cloud-sql-proxy
+          image: gcr.io/cloudsql-docker/gce-proxy:1.28.0
+          command:
+            - "/cloud_sql_proxy"
+            - "-log_debug_stdout"
+            - "-instances=applaudo-final-project-ed:us-central1:dev-my-sql"
+            - "-credential_file=/secrets/sql-client"
+          securityContext:
+            runAsNonRoot: true
+          volumeMounts:
+          - name: sql-proxy-volume
+            mountPath: /secrets/
+            readOnly: true
+
       volumes:
+      - name: sql-proxy-volume
+        secret:
+          secretName: sql-client
       - name: pterodactyl-app-content
         persistentVolumeClaim:
           claimName:  pterodactyl-app-claim
